@@ -17,12 +17,16 @@ def analyze_log(file_path : str):
 
 def detect_flood(ip_timestamps):
     for ip, timestamps in ip_timestamps.items():
-        count = 1
-        for j in range(len(timestamps)):
-            if timestamps[j] - timestamps[i] <= WINDOW:
-                count += 1
-            else:
+        timestamps.sort()
+
+        for i in range(len(timestamps)):
+            count = 1
+            for j in range(i+1, len(timestamps)):
+                if timestamps[j] - timestamps[i] <= WINDOW:
+                    count +=1
+                else:
+                    break    
+        
+            if count >= THRESHOLD:
+                print(f"[ALERT] Possible flood from {ip}: {count} request")
                 break
-        if count >= THRESHOLD:
-            print(f"[ALERT] Possible flood from {ip}: {count} request")
-            break
