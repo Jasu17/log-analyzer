@@ -1,9 +1,6 @@
 from collections import defaultdict
-from datetime import timedelta
+from .detectors import detect_flood
 from .parser import parse_line
-
-WINDOW = timedelta(seconds=10)
-THRESHOLD = 10
 
 def analyze_log(file_path : str):
     ip_timestamps = defaultdict(list)
@@ -13,20 +10,9 @@ def analyze_log(file_path : str):
             parsed = parse_line(line)
             if parsed:
                 ip_timestamps[parsed["ip"]].append(parsed["time"])
-    detect_flood(ip_timestamps)
+    alerts = []
 
-def detect_flood(ip_timestamps):
-    for ip, timestamps in ip_timestamps.items():
-        timestamps.sort()
+    alerts.extend(detect_flood(ip_timestamps))
 
-        for i in range(len(timestamps)):
-            count = 1
-            for j in range(i+1, len(timestamps)):
-                if timestamps[j] - timestamps[i] <= WINDOW:
-                    count +=1
-                else:
-                    break    
-        
-            if count >= THRESHOLD:
-                print(f"[ALERT] Possible flood from {ip}: {count} request")
-                break
+    for alert in alerts:
+        print(f"[ALERT] {alert}")
