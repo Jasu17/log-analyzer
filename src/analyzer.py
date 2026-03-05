@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .detectors import detect_flood, detect_sqli
+from .detectors import detect_flood, detect_sqli, detect_bruteforce
 from .parser import parse_line
 
 def analyze_log(file_path : str):
@@ -16,6 +16,9 @@ def analyze_log(file_path : str):
 
     alerts.extend(detect_flood(ip_timestamps))
     alerts.extend(detect_sqli(events))
+    alerts.extend(detect_bruteforce(events))
 
+    print("---- Security Alerts ----")
     for alert in alerts:
         print(f"[ALERT] {alert}")
+    print(f"\nTotal alerts: {len(alerts)}")

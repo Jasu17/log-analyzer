@@ -53,3 +53,36 @@ def detect_sqli(events: list):
 
 
     return alerts
+
+def detect_bruteforce(logs, threshold=10, window=30):
+
+    attempts = defaultdict(list)
+    alerts = []
+
+    for log in logs:
+        ip = log["ip"]
+        path = log["path"]
+        method = log["method"]
+        time = log["time"]
+
+        if method == "POST" and "login" in path:
+            attempts[ip].append(time)
+
+    for ip, times in attempts.items():
+        times.sort()
+
+        start = 0
+
+        for end in range(len(times)):
+            while times[end] - times[start] > timedelta(seconds=window):
+                start += 1
+
+            count = end - start + 1
+
+            if count >= threshold:
+                alerts.append(
+                    f"Possible brute force attack from {ip}: {count} login attempts in {window}s"
+                )
+                break
+
+    return alerts
