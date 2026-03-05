@@ -86,3 +86,40 @@ def detect_bruteforce(logs, threshold=10, window=30):
                 break
 
     return alerts
+
+SENSITIVE_PATHS = [
+    "/.env",
+    "/.git",
+    "/.git/config",
+    "/phpmyadmin",
+    "/wp-login.php",
+    "/wp-admin",
+    "/config.php",
+    "/backup",
+    "/backup.zip",
+    "/db.sql"
+]
+
+def detect_sensitive_access(events):
+    attempts = defaultdict(int)
+    status_map = {}
+    alerts = []
+
+    for event in events:
+        path = event["path"]
+        ip = event["ip"]
+        status = event["status"]
+
+        for sensitive in SENSITIVE_PATHS:
+            if sensitive in path:
+                key = (ip, sensitive)
+                attempts[key] += 1
+                status_map[key] = status
+
+    for (ip, path), count in attempts.items():
+        status = status_map [(ip, path)]
+        alerts.append(
+            f"Sensitive path scan from {ip}: {path} requested {count} times (status {status})"
+            )
+
+    return alerts
