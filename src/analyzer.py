@@ -1,6 +1,7 @@
 from collections import defaultdict
 from .detectors import detect_flood, detect_sqli, detect_bruteforce, detect_sensitive_access, detect_directory_scan, detect_suspicious_user_agents
 from .parser import parse_line
+from .report import generate_report
 
 def analyze_log(file_path : str):
     ip_timestamps = defaultdict(list)
@@ -25,3 +26,5 @@ def analyze_log(file_path : str):
     for alert in alerts:
         print(f"[ALERT] {alert}")
     print(f"\nTotal alerts: {len(alerts)}")
+
+    generate_report(events, alerts)
