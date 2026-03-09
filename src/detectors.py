@@ -123,3 +123,38 @@ def detect_sensitive_access(events):
             )
 
     return alerts
+
+def detect_directory_scan(events, threshold=20, window=30):
+    
+    attempts = defaultdict(list)
+    alerts = []
+
+    for event in events:
+
+        ip = event["ip"]
+        status = event["status"]
+        time = event["time"]
+
+        if status == 404:
+            attempts[ip].append(time)
+
+    for ip, times in attempts.items():
+
+        times.sort()
+        start = 0
+
+        for end in range(len(times)):
+
+            while times[end] - times[start] > timedelta(seconds=window):
+                start += 1
+
+            count = end - start +1
+
+            if count >= threshold:
+
+                alerts.append(
+                    f"Possible directory enumeration from {ip}: {count} 404 responses in {window}"                    
+                )
+                break
+
+    return alerts
