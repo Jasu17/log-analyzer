@@ -153,7 +153,7 @@ def detect_directory_scan(events, threshold=20, window=30):
             if count >= threshold:
 
                 alerts.append(
-                    f"Possible directory enumeration from {ip}: {count} 404 responses in {window}"                    
+                    f"Possible directory enumeration from {ip}: {count} 404 responses in {window}s"                    
                 )
                 break
 
