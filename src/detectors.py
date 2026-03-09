@@ -158,3 +158,32 @@ def detect_directory_scan(events, threshold=20, window=30):
                 break
 
     return alerts
+
+SUSPICIOUS_AGENTS = [
+    "sqlmap",
+    "nikto",
+    "gobuster",
+    "dirsearch",
+    "ffuf",
+    "wpscan",
+    "curl",
+    "wget",
+    "python-requests"
+]
+
+def detect_suspicious_user_agents(events):
+
+    alerts = []
+
+    for event in events:
+
+        ip = event["ip"]
+        ua = event["user_agent"].lower()
+
+        for agent in SUSPICIOUS_AGENTS:
+            if agent in ua:
+                alerts.append(
+                    f"Suspicious user-agent detected from {ip}: {event['user_agent']}"
+                )
+                break
+    return alerts

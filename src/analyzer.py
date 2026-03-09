@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .detectors import detect_flood, detect_sqli, detect_bruteforce, detect_sensitive_access, detect_directory_scan
+from .detectors import detect_flood, detect_sqli, detect_bruteforce, detect_sensitive_access, detect_directory_scan, detect_suspicious_user_agents
 from .parser import parse_line
 
 def analyze_log(file_path : str):
@@ -19,6 +19,7 @@ def analyze_log(file_path : str):
     alerts.extend(detect_bruteforce(events))
     alerts.extend(detect_sensitive_access(events))
     alerts.extend(detect_directory_scan(events))
+    alerts.extend(detect_suspicious_user_agents(events))
 
     print("---- Security Alerts ----")
     for alert in alerts:
