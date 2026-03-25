@@ -1,5 +1,7 @@
 from collections import Counter
 import re
+import json
+from datetime import datetime
 
 RISK_WEIGHTS = {
     "flood":1,
@@ -16,6 +18,22 @@ def extract_ip(alert: str):
         return "unknown"
     
     return match.group(1).rstrip(":")
+
+def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json"):
+    report = {
+        "timestamp": datetime.now().isoformat(),
+        "events_analyzed": len(events),
+        "unique_ips": len({event["ip"] for event in events}),
+        "total_alerts":len(alerts),
+        "alerts": alerts,
+        "top_ips":dict(ip_counter),
+        "risk_score":dict(risk_score)
+    }
+
+    with open(filename, "w") as f:
+        json.dump(report, f, indent=4)
+
+    print(f"\n-- Report exported to {filename}")
 
 def generate_report(events, alerts):
 
@@ -98,4 +116,6 @@ def generate_report(events, alerts):
         else:
             level = "LOW"
         print(f"{ip} - {level} ({score})")
+    
+    export_to_json(events, alerts, ip_counter, risk_score)
              
