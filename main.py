@@ -18,9 +18,15 @@ def main():
         help="Export report to JSON file"
     )
 
+    parser.add_argument(
+        "--only",
+        choices=["flood", "sqli", "brute", "scan", "sensitive", "agent"],
+        help="Filter alerts by type"
+    )
+
     args = parser.parse_args()
 
-    analyze_log(args.file, args.output)
+    analyze_log(args.file, args.output, args.only)
 
 if __name__ == "__main__":
     main()
