@@ -35,7 +35,7 @@ def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json
 
     print(f"\n-- Report exported to {filename}")
 
-def generate_report(events, alerts):
+def generate_report(events, alerts, output_file = None):
 
     print("\n---- Security Report ----\n")
 
@@ -117,5 +117,6 @@ def generate_report(events, alerts):
             level = "LOW"
         print(f"{ip} - {level} ({score})")
     
-    export_to_json(events, alerts, ip_counter, risk_score)
+    if output_file:
+        export_to_json(events, alerts, ip_counter, risk_score)
              

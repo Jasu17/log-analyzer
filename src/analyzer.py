@@ -3,7 +3,7 @@ from .detectors import detect_flood, detect_sqli, detect_bruteforce, detect_sens
 from .parser import parse_line
 from .report import generate_report
 
-def analyze_log(file_path : str):
+def analyze_log(file_path : str, output_file=None):
     ip_timestamps = defaultdict(list)
     events = []
 
@@ -27,4 +27,4 @@ def analyze_log(file_path : str):
         print(f"[ALERT] {alert}")
     print(f"\nTotal alerts: {len(alerts)}")
 
-    generate_report(events, alerts)
+    generate_report(events, alerts, output_file)
