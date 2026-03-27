@@ -155,4 +155,3 @@ This tool is intented for educational and defensive cybersegurity purposes only.
 ## Author
 
 Developed as a hands-on cybersecurity learning project focused on log analysis and attack detection.
----
