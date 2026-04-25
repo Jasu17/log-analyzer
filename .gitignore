@@ -4,3 +4,4 @@ __pycache__/
 venv/
 attack_simulator.sh
 report.json
+.pytest_cache/
