@@ -118,5 +118,5 @@ def generate_report(events, alerts, output_file = None):
         print(f"{ip} - {level} ({score})")
     
     if output_file:
-        export_to_json(events, alerts, ip_counter, risk_score)
+        export_to_json(events, alerts, ip_counter, risk_score, output_file)
              
