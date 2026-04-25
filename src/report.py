@@ -34,13 +34,26 @@ def extract_ip(alert: str):
     
     return match.group(1).rstrip(":")
 
+def _serialize_alert(alerts: list[str]) -> list[dict]:
+    serialized = []
+    for alert in alerts:
+        classification = classify_alert(alert)
+        serialized.append({
+            "type" : classification[0] if classification else "unknown",
+            "ip": extract_ip(alert),
+            "message": alert,
+            "timestamp": datetime.now().isoformat()
+        })
+    return serialized
+
+
 def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json"):
     report = {
         "timestamp": datetime.now().isoformat(),
         "events_analyzed": len(events),
         "unique_ips": len({event["ip"] for event in events}),
         "total_alerts":len(alerts),
-        "alerts": alerts,
+        "alerts": _serialize_alert(alerts),
         "top_ips":dict(ip_counter),
         "risk_score":dict(risk_score)
     }
