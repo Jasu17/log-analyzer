@@ -172,18 +172,22 @@ SUSPICIOUS_AGENTS = [
 ]
 
 def detect_suspicious_user_agents(events):
-
-    alerts = []
+    grouped = defaultdict(int)
 
     for event in events:
 
         ip = event["ip"]
         ua = event["user_agent"].lower()
-
+        
         for agent in SUSPICIOUS_AGENTS:
             if agent in ua:
-                alerts.append(
-                    f"Suspicious user-agent detected from {ip}: {event['user_agent']}"
-                )
+                key = (ip, event["user_agent"])
+                grouped[key] += 1
                 break
+    alerts = []
+    for (ip, ua), count in grouped.items():
+        alerts.append(
+            f"Suspicious user agent from {ip}: '{ua}' ({count} requests)"
+        )
+
     return alerts
