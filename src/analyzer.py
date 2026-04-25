@@ -59,4 +59,4 @@ def analyze_log(file_path : str, output_file=None, filter_type=None):
         print(f"[ALERT] {alert}")
     print(f"\nTotal alerts: {len(filtered_alerts)}")
 
-    generate_report(events, alerts, output_file)
+    generate_report(events, filtered_alerts, output_file)
