@@ -3,6 +3,15 @@ import re
 import json
 from datetime import datetime
 
+ALERT_TYPES = [
+    ("flood",      "flood",                "Flood"),
+    ("sqli",       "sql injection",        "SQLi"),
+    ("brute",      "brute force",          "Brute force"),
+    ("scan",       "directory enumeration","Directory scan"),
+    ("sensitive",  "sensitive path",       "Sensitive path"),
+    ("user-agent", "user-agent",           "User-agent"),
+]
+
 RISK_WEIGHTS = {
     "flood":1,
     "sqli":3,
@@ -11,6 +20,12 @@ RISK_WEIGHTS = {
     "sensitive":2,
     "user-agent":1
 }
+def classify_alert(alert: str) -> tuple[str, str] | None:
+    text = alert.lower()
+    for key, keyword, label in ALERT_TYPES:
+        if keyword in text:
+            return key, label
+    return None
 
 def extract_ip(alert: str):
     match = re.search(r'from ([0-9a-fA-F\.:]+)', alert)
@@ -38,85 +53,40 @@ def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json
 def generate_report(events, alerts, output_file = None):
 
     print("\n---- Security Report ----\n")
-
     print(f"Events analyzed: {len(events)}")
-
     unique_ips = {event["ip"] for event in events}
     print(f"Unique IPs: {len(unique_ips)}")
-
     print(f"Total alerts: {len(alerts)}\n")
-
     alert_types = Counter()
+    ip_counter = Counter()
+    risk_score = Counter()
 
     for alert in alerts:
+        ip = extract_ip(alert)
+        ip_counter[ip] +=1
 
-        if "flood" in alert.lower():
-            alert_types["Flood"] += 1
-        
-        elif "sql injection" in alert.lower():
-            alert_types["SQLi"] += 1
-        
-        elif "brute force" in alert.lower():
-            alert_types["Brute force"] += 1
-        
-        elif "directory enumeration" in alert.lower():
-            alert_types["Directory scan"] += 1
-        
-        elif "sensitive path" in alert.lower():
-            alert_types["Sensitive path"] += 1
-        
-        elif "user-agent" in alert.lower():
-            alert_types["User-agent"] += 1
+        classification = classify_alert(alert)
+        if classification:
+            hey, label = classification
+            alert_types[label] +=1
+            risk_score[ip] += RISK_WEIGHTS[key]
     
     print("Alerts by type")
 
-    for k, v in alert_types.items():
-        print(f"{k}: {v}")
+    for label, count in alert_types.items():
+        print(f"{label}: {count}")
 
     # top attacking IPs
-    ip_counter = Counter()
-    for alert in alerts:
-        ip = extract_ip(alert)
-        ip_counter[ip   ] +=1
-    
     print("\nTop attacking IPs")
     for ip, count in ip_counter.most_common():
         print(f"{ip} - {count} alerts")
 
-    #Risk score by ip
-    risk_score = Counter()
-    for alert in alerts:
-        ip = extract_ip(alert)
-        text = alert.lower()
-
-        if "flood" in text:
-            risk_score[ip] += RISK_WEIGHTS['flood']
-
-        elif "sql injection" in text:
-            risk_score[ip] += RISK_WEIGHTS['sqli']
-
-        elif "brute force" in text:
-            risk_score[ip] += RISK_WEIGHTS['brute']
-
-        elif "directory enumeration" in text:
-            risk_score[ip] += RISK_WEIGHTS['scan']
-
-        elif "sensitive path" in text:
-            risk_score[ip] += RISK_WEIGHTS['sensitive']
-
-        elif "user-agent" in text:
-            risk_score[ip] += RISK_WEIGHTS['user-agent']
-            
+    #Risk score by ip        
     print("\nRisk score by ip")
+
     for ip, score in risk_score.most_common():
-        if score>=10:
-            level = "HIGH"
-        elif score >=5:
-            level = "MEDIUM"
-        else:
-            level = "LOW"
+        level = "HIGH" if score >=10 else "MEDIUM" if score >=5 else "LOW"
         print(f"{ip} - {level} ({score})")
-    
+
     if output_file:
         export_to_json(events, alerts, ip_counter, risk_score, output_file)
-             
