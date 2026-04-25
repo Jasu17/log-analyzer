@@ -20,6 +20,7 @@ def main():
 
     parser.add_argument(
         "--only",
+        nargs="+",
         choices=["flood", "sqli", "brute", "scan", "sensitive", "agent"],
         help="Filter alerts by type"
     )
