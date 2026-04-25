@@ -10,6 +10,13 @@ from .detectors import (
 from .parser import parse_line
 from .report import generate_report
 
+FILTER_KEYWORDS = {
+    "flood": "flood",
+    "sqli": "sql injection",
+    "brute": "brute force",
+    "scan": "directory enumeration",
+    "sensitive": "sensitive path",}
+
 def filter_alerts(alerts, filter_type):
     if not filter_type:
         return alerts
@@ -17,18 +24,7 @@ def filter_alerts(alerts, filter_type):
 
     for alert in alerts:
         text = alert.lower()
-
-        if filter_type == "flood" and "flood" in text:
-            filtered.append(alert)
-        elif filter_type == "sqli" and "sql injection" in text:
-            filtered.append(alert)
-        elif filter_type == "brute" and "brute force" in text:
-            filtered.append(alert)
-        elif filter_type == "scan" and "directory enumeration" in text:
-            filtered.append(alert)
-        elif filter_type == "sensitive" and "sensitive path" in text:
-            filtered.append(alert)
-        elif filter_type == "agent" and "user-agent" in text:
+        if any (FILTER_KEYWORDS[key] in text for key in filter_type):
             filtered.append(alert)
 
     return filtered
