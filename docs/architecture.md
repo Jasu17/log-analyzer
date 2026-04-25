@@ -3,7 +3,7 @@
 ## Overview
 This project is a web server log analyzer designed to detect common web-based attacks by parsing and analyzing HTTP access logs (Apache/Nginx).
 
-It process raw log files and transform them into structured events, which are then analyzed usign detection rules.
+It processes raw log files and transforms them into structured events, which are then analyzed using detection rules.
 
 ---
 
@@ -37,11 +37,11 @@ Implemented detectors:
 - Directory enumeration
 - Suspicious user-agent detection
   
-Each detector returns a list of alerts
+Each detector returns a list of alerts.
 
 ---
 ### 3. analyzer.py
-Core orchestrator of the system
+Core orchestrator of the system.
 
 Workflow:
 
@@ -73,7 +73,7 @@ Raw Logs -> Parser -> Events -> Detectors -> Alerts -> report
 
 - Modular design (each component has a clear responsibility)
 - Extensible (new detectors can be added easily)
-- CLI-driven (no harcoded values)
+- CLI-driven (no hardcoded values)
 - Reproducible (supports sample logs)
 
 ---

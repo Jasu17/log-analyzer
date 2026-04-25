@@ -1,17 +1,17 @@
 # Detection Techniques
 
-This document describes how different attack types are identifies from log data.
+This document describes how different attack types are identified from log data.
 
 ---
 
 ## 1. Flood / DoS Detection
 
 ### Description
-A large numer of request from the same IP in a short period of time.
+A large number of requests from the same IP in a short period of time.
 
 ### Logic
-- Group request by IP
-- Count request within a time window
+- Group requests by IP
+- Count requests within a time window
 - Trigger alert if threshold exceeded
 
 ---
@@ -27,11 +27,11 @@ Injection of malicious SQL queries via URL parameters.
 - '--' comments
 
 ### Detection
-Regrex pattern matching in request paths.
+Regex pattern matching in request paths.
 
 ---
 
-## 3. Brute force
+## 3. Brute Force
 
 ### Description
 Multiple login attempts in a short period.
@@ -46,7 +46,7 @@ Multiple login attempts in a short period.
 ## 4. Sensitive Path Access
 
 ### Description
-Attempts to acces hidden or critical files.
+Attempts to access hidden or critical files.
 
 ### Examples
 - /.env
@@ -55,7 +55,7 @@ Attempts to acces hidden or critical files.
 - /phpmyadmin
 
 ### Detection
-Match request paths a list of sensitive targets.
+Match request paths against a list of sensitive targets.
 
 ---
 
@@ -65,7 +65,7 @@ Match request paths a list of sensitive targets.
 Automated scanning of non-existent paths.
 
 ### Indicators
-- High number of 404 responces
+- High number of 404 responses
 - Short time window
 
 ---
@@ -73,7 +73,7 @@ Automated scanning of non-existent paths.
 ## 6. Suspicious User-Agent
 
 ### Description
-Request made by automated tools.
+Requests made by automated tools.
 
 ### Examples
 - sqlmap

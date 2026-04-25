@@ -2,17 +2,17 @@
 
 A lightweight security tool that analyzes web server logs (Apache/Nginx) to detect common attack patterns such as SQL injection, brute force attempts, and automated scanning.
 
-Designed as a practical cybersecurity proyect with real detection logic, CLI usage and structured reporting.
+Designed as a practical cybersecurity project with real detection logic, CLI usage and structured reporting.
 
 ---
 
 ## Features
-- SQL Inyection detection
-- Brute firce detection (login attempts)
+- SQL Injection detection
+- Brute force detection (login attempts)
 - Flood / DoS detection
 - Sensitive path scanning (e.g. /.env /.git)
-- Directory enumeration detection (based con 404 patterns)
-- Suspiciouscuser-agent detection (sqlmap, gobuster, etc.)
+- Directory enumeration detection (based on 404 patterns)
+- Suspicious user-agent detection (sqlmap, gobuster, etc.)
 - Risk scoring per IP
 - Top attacking IPs ranking
 - JSON report export
@@ -33,7 +33,7 @@ Raw logs -> Parser -> Structured Events -> Detectors -> Alerts -> Report
 
 ---
 
-## Instalation
+## Installation
 
 Clone the repository:
 
@@ -120,7 +120,7 @@ log-analyzer/
 
 ## Documentation
 
-Detailed documentation is aviable in the 'docs/' folder:
+Detailed documentation is available in the `docs/` folder:
 
 - docs/architecture.md -> system design
 - docs/detections.md -> detection logic
@@ -138,7 +138,7 @@ pytest
 
 ## Future improvements
 
-- Real-time monitoring mode (tail f)
+- Real-time monitoring mode (tail -f)
 - Multiple filter support
 - Web dashboard for visualization
 - Integration with SIEM tools
@@ -148,7 +148,7 @@ pytest
 
 ## Disclaimer
 
-This tool is intented for educational and defensive cybersegurity purposes only.
+This tool is intended for educational and defensive cybersecurity purposes only.
 
 ---
 
