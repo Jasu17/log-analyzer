@@ -64,12 +64,6 @@ def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json
     print(f"\n-- Report exported to {filename}")
 
 def generate_report(events, alerts, output_file = None):
-
-    print("\n---- Security Report ----\n")
-    print(f"Events analyzed: {len(events)}")
-    unique_ips = {event["ip"] for event in events}
-    print(f"Unique IPs: {len(unique_ips)}")
-    print(f"Total alerts: {len(alerts)}\n")
     alert_types = Counter()
     ip_counter = Counter()
     risk_score = Counter()
@@ -83,23 +77,28 @@ def generate_report(events, alerts, output_file = None):
             hey, label = classification
             alert_types[label] +=1
             risk_score[ip] += RISK_WEIGHTS[key]
-    
-    print("Alerts by type")
+    if not quiet:  
+        print("\n---- Security Report ----\n")
+        print(f"Events analyzed: {len(events)}")
+        print(f"Unique IPs: {len({event["ip"] for event in events})}")
+        print(f"Total alerts: {len(alerts)}\n")
 
-    for label, count in alert_types.items():
-        print(f"{label}: {count}")
+        print("Alerts by type")
 
-    # top attacking IPs
-    print("\nTop attacking IPs")
-    for ip, count in ip_counter.most_common():
-        print(f"{ip} - {count} alerts")
+        for label, count in alert_types.items():
+            print(f"{label}: {count}")
 
-    #Risk score by ip        
-    print("\nRisk score by ip")
+        # top attacking IPs
+        print("\nTop attacking IPs")
+        for ip, count in ip_counter.most_common():
+            print(f"{ip} - {count} alerts")
 
-    for ip, score in risk_score.most_common():
-        level = "HIGH" if score >=10 else "MEDIUM" if score >=5 else "LOW"
-        print(f"{ip} - {level} ({score})")
+        #Risk score by ip        
+        print("\nRisk score by ip")
+
+        for ip, score in risk_score.most_common():
+            level = "HIGH" if score >=10 else "MEDIUM" if score >=5 else "LOW"
+            print(f"{ip} - {level} ({score})")
 
     if output_file:
         export_to_json(events, alerts, ip_counter, risk_score, output_file)

@@ -25,6 +25,12 @@ def main():
         help="Filter alerts by type"
     )
 
+    parser.add_argument(
+        "--quiet",
+        action="store_true",
+        help="Supress console output (usefull with --output for scripting)"
+    )
+
     args = parser.parse_args()
 
     analyze_log(args.file, args.output, args.only)

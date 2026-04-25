@@ -11,11 +11,13 @@ from .parser import parse_line
 from .report import generate_report
 
 FILTER_KEYWORDS = {
-    "flood": "flood",
-    "sqli": "sql injection",
-    "brute": "brute force",
-    "scan": "directory enumeration",
-    "sensitive": "sensitive path",}
+    "flood":     "flood",
+    "sqli":      "sql injection",
+    "brute":     "brute force",
+    "scan":      "directory enumeration",
+    "sensitive": "sensitive path",
+    "agent":     "user-agent",
+}
 
 def filter_alerts(alerts, filter_type):
     if not filter_type:
@@ -50,9 +52,10 @@ def analyze_log(file_path : str, output_file=None, filter_type=None):
 
     filtered_alerts = filter_alerts(alerts, filter_type)
 
-    print("---- Security Alerts ----")
-    for alert in filtered_alerts:
-        print(f"[ALERT] {alert}")
-    print(f"\nTotal alerts: {len(filtered_alerts)}")
+    if not quiet:
+        print("---- Security Alerts ----")
+        for alert in filtered_alerts:
+            print(f"[ALERT] {alert}")
+        print(f"\nTotal alerts: {len(filtered_alerts)}")
 
-    generate_report(events, filtered_alerts, output_file)
+    generate_report(events, filtered_alerts, output_file, quiet)
