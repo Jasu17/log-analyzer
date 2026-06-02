@@ -99,7 +99,7 @@ Risk score by IP
 ::1 → HIGH (18)
 ```
 
-## Proyect Structure
+## Project Structure
 
 ```
 log-analyzer/
