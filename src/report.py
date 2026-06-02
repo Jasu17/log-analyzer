@@ -63,19 +63,19 @@ def export_to_json(events, alerts, ip_counter, risk_score, filename="report.json
 
     print(f"\n-- Report exported to {filename}")
 
-def generate_report(events, alerts, output_file = None):
+def generate_report(events, alerts, output_file = None, quiet=False):
     alert_types = Counter()
     ip_counter = Counter()
     risk_score = Counter()
 
     for alert in alerts:
         ip = extract_ip(alert)
-        ip_counter[ip] +=1
+        ip_counter[ip] += 1
 
         classification = classify_alert(alert)
         if classification:
-            hey, label = classification
-            alert_types[label] +=1
+            key, label = classification
+            alert_types[label] += 1
             risk_score[ip] += RISK_WEIGHTS[key]
     if not quiet:  
         print("\n---- Security Report ----\n")

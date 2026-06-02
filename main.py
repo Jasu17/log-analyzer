@@ -33,7 +33,7 @@ def main():
 
     args = parser.parse_args()
 
-    analyze_log(args.file, args.output, args.only)
+    analyze_log(args.file, args.output, args.only, args.quiet)
 
 if __name__ == "__main__":
     main()

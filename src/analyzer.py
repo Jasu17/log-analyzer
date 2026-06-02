@@ -31,7 +31,7 @@ def filter_alerts(alerts, filter_type):
 
     return filtered
 
-def analyze_log(file_path : str, output_file=None, filter_type=None):
+def analyze_log(file_path : str, output_file=None, filter_type=None, quiet=False):
     ip_timestamps = defaultdict(list)
     events = []
 
